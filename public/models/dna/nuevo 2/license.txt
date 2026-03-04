@@ -1,0 +1,11 @@
+Model Information:
+* title:	DNA
+* source:	https://sketchfab.com/3d-models/dna-4f64e21604834e029be1497ac72a5bc0
+* author:	J4747 (https://sketchfab.com/J4747)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "DNA" (https://sketchfab.com/3d-models/dna-4f64e21604834e029be1497ac72a5bc0) by J4747 (https://sketchfab.com/J4747) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

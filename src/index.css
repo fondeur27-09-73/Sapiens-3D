@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-transparent text-white;
+  }
+}
+
+/*
+  Glitch text animations for the XRayText component
+*/
+@keyframes glitch-anim-1 {
+  0% {
+    transform: translate(0);
+  }
+
+  20% {
+    transform: translate(-2px, 2px);
+  }
+
+  40% {
+    transform: translate(-2px, -2px);
+  }
+
+  60% {
+    transform: translate(2px, 2px);
+  }
+
+  80% {
+    transform: translate(2px, -2px);
+  }
+
+  100% {
+    transform: translate(0);
+  }
+}
+
+@keyframes glitch-anim-2 {
+  0% {
+    transform: translate(0);
+  }
+
+  20% {
+    transform: translate(3px, -1px);
+  }
+
+  40% {
+    transform: translate(-1px, 3px);
+  }
+
+  60% {
+    transform: translate(-3px, 1px);
+  }
+
+  80% {
+    transform: translate(1px, -3px);
+  }
+
+  100% {
+    transform: translate(0);
+  }
+}
+
+.glitch-layer-1 {
+  /* No constant movement for the main layer, just outline */
+}
+
+.glitch-layer-2 {
+  animation: glitch-anim-1 0.4s infinite linear alternate-reverse;
+}
+
+.glitch-layer-3 {
+  animation: glitch-anim-2 0.3s infinite linear alternate-reverse;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #08244a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4ade80;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #22c55e;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #08244a;
+}
+
+/* Vignette Overlay from Stitch Blue Theme */
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, transparent 50%, rgba(2, 10, 26, 0.7) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Scanlines Overlay from Stitch */
+.hero-scanlines {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(255, 255, 255, 0) 50%, rgba(56, 189, 248, 0.02) 50%);
+  background-size: 100% 2px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Higher contrast Film Grain */
+.film-grain-img {
+  position: fixed;
+  inset: 0;
+  background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAG_L-iksQfr8wPXvLUwMnr-3hO3KWPrn58Z_B4ROBc3i-Qaed0CfcRyOlmD488w3Kkjw_Ipws_HkLaokEkQSVq0pEpSjj8uCwODRa6wM0Fd_PZ82tSyInOMy8MgFDDlfe0bch26akVSEtLjMSKIHxcelfMN0KsBrdtuw7WpQKtC__vg2PHvUVwj87V5sGXfDVpH8vCW7HF-HkhIYHgrLUpzj9bW68w8wM02bweyrXou2nPj5lJ1Pvu-sgnLkt5fFI3e-pHr5zg9A);
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 4;
+}
