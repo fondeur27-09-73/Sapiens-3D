@@ -44,8 +44,16 @@ function DualDNA() {
   const rotX = 0;
   const rotY = 0;
   const rotZ = 0;
-  const dnaScale = 2.0;
+  // Dynamic scale: 2.0 for desktop, 1.2 for mobile
+  const [dnaScale, setDnaScale] = useState(2.0);
   const autoRotate = true;
+
+  useEffect(() => {
+    const updateScale = () => setDnaScale(window.innerWidth < 768 ? 1.2 : 2.0)
+    updateScale()
+    window.addEventListener('resize', updateScale)
+    return () => window.removeEventListener('resize', updateScale)
+  }, [])
 
   // Sync DNA to Scroll: Only show in Section 2, make it perfectly vertical
   useFrame((state) => {
@@ -87,8 +95,8 @@ function DualDNA() {
 
 function Section({ id, children, className }) {
   return (
-    <section id={id} className={`w-screen min-h-[150vh] flex flex-col justify-start px-10 md:px-32 relative z-10 ${className}`}>
-      <div className="sticky top-[2vh] max-w-4xl pt-10 pb-20">
+    <section id={id} className={`w-screen min-h-[150vh] flex flex-col justify-start px-6 md:px-32 relative z-10 ${className}`}>
+      <div className="sticky top-[2vh] max-w-4xl pt-10 pb-20 w-full">
         {children}
       </div>
     </section>
@@ -96,9 +104,9 @@ function Section({ id, children, className }) {
 }
 
 function EndlessButton({ text }) {
-  // Ultra-premium circular button inspired by the Stitch blueprint design
+  // Responsive circular button: Smaller on mobile (120px vs 150px)
   return (
-    <div className="relative mt-12 inline-flex cursor-pointer group">
+    <div className="relative mt-8 md:mt-12 inline-flex cursor-pointer group scale-[0.85] md:scale-100 origin-left">
       <div className="relative flex items-center justify-center w-[150px] h-[150px] rounded-full border border-white/60 bg-white/30 backdrop-blur-xl transition-all duration-500 cubic-bezier(0.23, 1, 0.32, 1) group-hover:scale-110 group-hover:rotate-6 group-hover:bg-[#38bdf8] group-hover:border-[#38bdf8] z-10">
 
         {/* Outer Rotating Dashed Ring - Ultra High Visibility */}
@@ -117,6 +125,15 @@ function EndlessButton({ text }) {
 
 function App() {
   const mainRef = useRef()
+
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     const sections = ['.gs-fade-up']
@@ -192,17 +209,17 @@ function App() {
           <div className="hero-vignette" />
           <div className="hero-scanlines" />
 
-          {/* Spline 3D Robot Background */}
+          {/* Spline 3D Robot Background - Positioned and Scaled for mobile */}
           <div className="absolute inset-0 z-0 pointer-events-auto flex items-end justify-center overflow-hidden">
-            <div className="w-full h-[105vh] scale-[0.85] origin-bottom translate-y-[2vh]">
+            <div className={`w-full h-full flex flex-col items-center justify-end transition-transform duration-700 ${isMobile ? 'scale-[0.6] translate-y-[-5vh]' : 'scale-[0.85] translate-y-[2vh]'}`}>
               <Spline scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" />
             </div>
           </div>
 
-          <div className="text-center gs-hero-content z-20 relative -mt-[50vh] pointer-events-auto">
+          <div className="text-center gs-hero-content z-20 relative -mt-[45vh] md:-mt-[50vh] pointer-events-auto px-4">
             <XRayText
               text="ROBOT<br />REVOLUTION"
-              className="font-['Orbitron'] text-[4rem] lg:text-[6rem] font-black leading-[0.9] tracking-tighter mb-6 drop-shadow-[0_0_30px_rgba(56,189,248,0.3)] pointer-events-auto"
+              className="font-['Orbitron'] text-[2.5rem] md:text-[4rem] lg:text-[6rem] font-black leading-[0.9] tracking-tighter mb-6 drop-shadow-[0_0_30px_rgba(56,189,248,0.3)] pointer-events-auto"
             />
 
             <div className="flex flex-col items-center mt-10 pointer-events-none group">
@@ -224,21 +241,21 @@ function App() {
         <Section id="sec-2" className="items-start">
           <XRayText
             text="EL CÓDIGO TRANSMITE<br />CONFIANZA"
-            className="gs-fade-up font-['Orbitron'] text-[2.5rem] md:text-[3.5rem] font-bold leading-tight mb-8 uppercase text-white"
+            className="gs-fade-up font-['Orbitron'] text-[1.8rem] md:text-[2.5rem] lg:text-[3.5rem] font-bold leading-tight mb-8 uppercase text-white"
           />
-          <div className="gs-fade-up mt-[55vh]">
+          <div className="gs-fade-up mt-[40vh] md:mt-[55vh]">
             <EndlessButton text={<>Ver<br />Modelos</>} />
           </div>
         </Section>
 
         {/* SEC 3: DATA CULTIVATED */}
-        <Section id="sec-3" className="items-end text-right">
+        <Section id="sec-3" className="items-end text-right md:items-end md:text-right">
           <XRayText
             text='PAGA SOLO<br /><span className="text-[#38bdf8]">POR SERVICIO</span>'
-            className="gs-fade-up font-['Orbitron'] text-[4rem] md:text-[5rem] font-bold leading-tight mb-8"
+            className="gs-fade-up font-['Orbitron'] text-[2.5rem] md:text-[4rem] lg:text-[5rem] font-bold leading-tight mb-8"
           />
           <div className="gs-fade-up flex flex-col items-end">
-            <p className="text-xl text-white/70 mb-8 max-w-xl font-light text-justify">
+            <p className="text-lg md:text-xl text-white/70 mb-8 max-w-xl font-light text-justify">
               Con el modelo RaaS (Robot as a Service), Sapiens Robotics se encarga del mantenimiento preventivo, soporte y actualizaciones. Tu única preocupación será ver cómo mejora la experiencia de tu marca con el cliente.
             </p>
             <EndlessButton text={<>Sectores<br />Clave</>} />
@@ -249,10 +266,10 @@ function App() {
         <Section id="sec-4" className="items-start">
           <XRayText
             text='INTEGRATE<br /><span className="text-white">HOY MISMO</span>'
-            className="gs-fade-up font-['Orbitron'] text-[4rem] md:text-[5rem] font-bold leading-tight mb-8 drop-shadow-[0_0_30px_rgba(56,189,248,0.3)]"
+            className="gs-fade-up font-['Orbitron'] text-[2.5rem] md:text-[4rem] lg:text-[5rem] font-bold leading-tight mb-8 drop-shadow-[0_0_30px_rgba(56,189,248,0.3)]"
           />
           <div className="gs-fade-up">
-            <p className="text-xl text-white/70 mb-8 max-w-xl font-light text-justify">
+            <p className="text-lg md:text-xl text-white/70 mb-8 max-w-xl font-light text-justify">
               Agenta tu demostracion, estamos ofreciendo 7 dias gratis en cualquier PV del pais* .
             </p>
             <EndlessButton text={<>Contactar<br />Asesor</>} />
