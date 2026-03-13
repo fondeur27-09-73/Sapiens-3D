@@ -81,7 +81,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #08244a;
+  background: #021629;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -97,7 +97,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background-color: #08244a;
+  background-color: #021629;
 }
 
 /* Vignette Overlay from Stitch Blue Theme */

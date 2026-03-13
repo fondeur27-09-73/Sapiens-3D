@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const SapiensLogo = ({ className = '', size = 45 }) => {
+export const SapiensLogo = ({ className = '', size = 45, light = false }) => {
     return (
         <div className={`flex items-center gap-4 ${className}`}>
             {/* SVG Icon - Replicating the new Robot Head design */}
@@ -38,15 +38,15 @@ export const SapiensLogo = ({ className = '', size = 45 }) => {
 
             {/* Text Branding */}
             <div className="flex flex-col items-start leading-none">
-                <span className="text-white text-2xl font-bold tracking-[0.25em] uppercase font-display">
+                <span className={`${light ? 'text-slate-900' : 'text-white'} text-2xl font-bold tracking-[0.25em] uppercase font-display`}>
                     Sapiens
                 </span>
                 <div className="flex items-center w-full gap-2 mt-1">
-                    <div className="h-[1px] flex-1 bg-white/40"></div>
-                    <span className="text-[9px] text-white/70 tracking-[0.4em] uppercase font-semibold">
+                    <div className={`h-[1px] flex-1 ${light ? 'bg-slate-900/20' : 'bg-white/40'}`}></div>
+                    <span className={`text-[9px] ${light ? 'text-slate-900/70' : 'text-white/70'} tracking-[0.4em] uppercase font-semibold`}>
                         Robotics
                     </span>
-                    <div className="h-[1px] flex-1 bg-white/40"></div>
+                    <div className={`h-[1px] flex-1 ${light ? 'bg-slate-900/20' : 'bg-white/40'}`}></div>
                 </div>
             </div>
         </div>

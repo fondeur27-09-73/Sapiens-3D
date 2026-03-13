@@ -2,9 +2,16 @@ import { useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-export function ParticleNetwork({ count = 120, radius = 6, connectionDistance = 2.0 }) {
+export function ParticleNetwork({ count = 120, radius = 6, connectionDistance = 2.0, light = false }) {
   const points = useRef()
   const lines = useRef()
+
+  // Base brand blue: #38bdf8 -> (56, 189, 248)
+  const brandBlue = {
+    r: 56 / 255,
+    g: 189 / 255,
+    b: 248 / 255
+  }
 
   // Generate random starting positions, velocities, and a custom "blink phase" for each sphere
   const [positions, velocities, blinkPhases] = useMemo(() => {
@@ -43,12 +50,12 @@ export function ParticleNetwork({ count = 120, radius = 6, connectionDistance = 
   const pointColors = useMemo(() => {
     const colors = new Float32Array(count * 3)
     for (let i = 0; i < count; i++) {
-      colors[i * 3] = 56 / 255   // Base Sky Blue
-      colors[i * 3 + 1] = 189 / 255
-      colors[i * 3 + 2] = 248 / 255
+      colors[i * 3] = brandBlue.r
+      colors[i * 3 + 1] = brandBlue.g
+      colors[i * 3 + 2] = brandBlue.b
     }
     return colors
-  }, [count])
+  }, [count, brandBlue])
 
   // Geometry for the Spheres
   const pointsGeometry = useMemo(() => {
@@ -87,15 +94,15 @@ export function ParticleNetwork({ count = 120, radius = 6, connectionDistance = 
       positionsArray[i * 3 + 1] = y
       positionsArray[i * 3 + 2] = z
 
-      // The "Bulb Blinking" effect: Make 1 out of every 5 particles glow bright yellow/white occasionally
+      // The "Bulb Blinking" effect: Pulse with the brand blue
       if (i % 5 === 0) {
         // Uses a Sine wave to pulse on and off smoothly
-        const brightness = (Math.sin(time * 2.0 + blinkPhases[i]) + 1) / 2
+        const pulse = (Math.sin(time * 2.0 + blinkPhases[i]) + 1) / 2
 
-        // Transition from Sky Blue (base) to Bright White (glow)
-        colorsArray[i * 3] = (56 / 255) + brightness * 0.7     // R gets closer to 1
-        colorsArray[i * 3 + 1] = (189 / 255) + brightness * 0.2 // G closer to 1 
-        colorsArray[i * 3 + 2] = (248 / 255) + brightness * 0.05 // B stays high
+        // Keep it blue, just make it more vibrant/saturated or brighter but Blue
+        colorsArray[i * 3] = brandBlue.r * (1 + pulse * 0.5)
+        colorsArray[i * 3 + 1] = brandBlue.g * (1 + pulse * 0.5)
+        colorsArray[i * 3 + 2] = brandBlue.b * (1 + pulse * 0.5)
       }
     }
 
@@ -126,20 +133,20 @@ export function ParticleNetwork({ count = 120, radius = 6, connectionDistance = 
           linePositions[lineIdx++] = positionsArray[i * 3 + 1]
           linePositions[lineIdx++] = positionsArray[i * 3 + 2]
 
-          // Subtle Sky Blue lines
-          lineColors[colorIdx++] = 56 / 255
-          lineColors[colorIdx++] = 189 / 255
-          lineColors[colorIdx++] = 248 / 255
-          lineColors[colorIdx++] = alpha * 0.5
+          // Use Brand Blue for lines
+          lineColors[colorIdx++] = brandBlue.r
+          lineColors[colorIdx++] = brandBlue.g
+          lineColors[colorIdx++] = brandBlue.b
+          lineColors[colorIdx++] = alpha * (light ? 0.9 : 0.6)
 
           linePositions[lineIdx++] = positionsArray[j * 3]
           linePositions[lineIdx++] = positionsArray[j * 3 + 1]
           linePositions[lineIdx++] = positionsArray[j * 3 + 2]
 
-          lineColors[colorIdx++] = 56 / 255
-          lineColors[colorIdx++] = 189 / 255
-          lineColors[colorIdx++] = 248 / 255
-          lineColors[colorIdx++] = alpha * 0.5
+          lineColors[colorIdx++] = brandBlue.r
+          lineColors[colorIdx++] = brandBlue.g
+          lineColors[colorIdx++] = brandBlue.b
+          lineColors[colorIdx++] = alpha * (light ? 0.9 : 0.6)
         }
       }
     }
@@ -181,19 +188,26 @@ export function ParticleNetwork({ count = 120, radius = 6, connectionDistance = 
       {/* PERFECT GLOWING SPHERES */}
       <points ref={points} geometry={pointsGeometry}>
         <pointsMaterial
-          size={0.15}
+          size={light ? 0.35 : 0.25}
           vertexColors={true}
           map={circleTexture}
           transparent={true}
           depthWrite={false}
           alphaTest={0.01}
-          blending={THREE.AdditiveBlending}
+          opacity={light ? 1 : 0.8}
+          blending={light ? THREE.NormalBlending : THREE.AdditiveBlending}
         />
       </points>
 
       {/* The Connecting Lines */}
       <lineSegments ref={lines} geometry={lineGeometry}>
-        <lineBasicMaterial vertexColors={true} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
+        <lineBasicMaterial
+          vertexColors={true}
+          transparent
+          depthWrite={false}
+          opacity={light ? 0.7 : 0.5}
+          blending={light ? THREE.NormalBlending : THREE.AdditiveBlending}
+        />
       </lineSegments>
     </group>
   )

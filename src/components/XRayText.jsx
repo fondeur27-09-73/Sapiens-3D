@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 
-export const XRayText = ({ text, className = "" }) => {
+export const XRayText = ({ text, className = "", light = false }) => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
@@ -85,7 +85,8 @@ export const XRayText = ({ text, className = "" }) => {
           ctx.beginPath();
           const particleRadius = p.baseRadius * (1 + p.z * 0.5);
           ctx.arc(p.x, p.y, particleRadius, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(255, 255, 255, " + (opacity * p.z) + ")";
+          // High vibrancy blue for light mode
+          ctx.fillStyle = light ? `rgba(0, 110, 255, ${opacity * p.z * 1.2})` : `rgba(255, 255, 255, ${opacity * p.z})`;
           ctx.fill();
         }
       });
@@ -105,7 +106,8 @@ export const XRayText = ({ text, className = "" }) => {
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = "rgba(255, 255, 255, " + lineOpacity + ")";
+            // Stronger blue lines
+            ctx.strokeStyle = light ? `rgba(0, 140, 255, ${lineOpacity * 0.8})` : `rgba(255, 255, 255, ${lineOpacity})`;
             ctx.lineWidth = 0.5 + (p1.z * 0.5);
             ctx.stroke();
           }
@@ -121,7 +123,7 @@ export const XRayText = ({ text, className = "" }) => {
       window.removeEventListener("resize", resizeCanvas);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [light]);
 
   useEffect(() => {
     const handleGlobalMouseMove = (e) => {
@@ -172,7 +174,7 @@ export const XRayText = ({ text, className = "" }) => {
       >
         <span
           className="text-transparent font-black tracking-tighter block relative z-10"
-          style={{ WebkitTextStroke: "2px rgba(255,255,255,1)" }}
+          style={{ WebkitTextStroke: light ? "2px rgba(0,163,255,0.8)" : "2px rgba(255,255,255,1)" }}
           dangerouslySetInnerHTML={{ __html: text }}
         />
       </div>
